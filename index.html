@@ -73,9 +73,19 @@
             divCol.style = "min-width:285px; min-height:460px";
             divCol.classList.add("col-4");
 
+            const adminBadge = document.createElement("span");
+            adminBadge.classList.add("badge", "text-bg-danger");
+            adminBadge.style = "position:absolute; top:0; right:0; cursor:pointer";
+            adminBadge.innerText = "Admin";
+
+            adminBadge.addEventListener("click", () => {
+              window.location.href = `./details.html?productId=${product._id}`;
+            });
+
             // Genero un div contenitore per gli elementi delle card.
             const cardDiv = document.createElement("div");
             cardDiv.classList.add("card");
+            cardDiv.style = "postion: relative; overflow: hidden";
 
             // Genero un img per le immagini delle card.
             const cardImg = document.createElement("img");
@@ -126,7 +136,7 @@
             const detailsBtn = document.createElement("button");
             detailsBtn.classList.add("btn", "btn-sm", "btn-primary");
             detailsBtn.innerText = "Scopri di Più";
-            detailsBtn.innerHTML = `<a class="text-decoration-none text-light" href="./details.html?productId=${product._id}">Scopri di più</a>`;
+            detailsBtn.innerHTML = `<a class="text-decoration-none text-light" href="./user-details.html?productId=${product._id}">Scopri di più</a>`;
             detailsBtn.type = "button";
 
             const idDiv = document.createElement("div");
@@ -157,6 +167,7 @@
 
             cardDiv.appendChild(cardImg);
             cardDiv.appendChild(cardBody);
+            cardDiv.appendChild(adminBadge);
 
             divCol.appendChild(cardDiv);
             divContainer.appendChild(divCol);

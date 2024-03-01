@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crudazon - Shop</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="./index.html"><img src="./assets/img/Crudazon-shop.png" alt="logo" /></a>
+        <button
+          class="navbar-toggler d-lg-none"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsibleNavId"
+          aria-controls="collapsibleNavId"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+          <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./back_office.html">Backoffice</a>
+            </li>
+          </ul>
+          <form class="d-flex my-2 my-lg-0">
+            <input class="form-control me-sm-2" type="text" placeholder="Search" />
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="row d-flex justify-content-center mt-5">
+        <div class="col-4 bg-body-tertiary rounded p-4 shadow-sm">
+          <h5>Nuovo prodotto:</h5>
+          <form onsubmit="handleProduct(event)">
+            <div class="mb-3">
+              <label for="name" class="form-label">Nome Prodotto</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                aria-describedby="name"
+                placeholder="Inserisci il nome del prodotto"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Descrizione</label>
+              <textarea
+                type="text"
+                class="form-control"
+                id="description"
+                aria-describedby="description"
+                placeholder="Inserisci la descrizione"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="brand" class="form-label">Brand</label>
+              <input
+                type="text"
+                class="form-control"
+                id="brand"
+                aria-describedby="brand"
+                placeholder="Inserisci il brand"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="imageUrl" class="form-label">Immagine</label>
+              <input
+                type="url"
+                class="form-control"
+                id="imageUrl"
+                aria-describedby="imageUrl"
+                placeholder="Inserisci il link dell'immagine"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">Prezzo</label>
+              <input type="number" class="form-control" id="price" aria-describedby="price" required />
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary">Invia</button>
+              <button type="reset" class="btn btn-success">Resetta</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const URL = "https://striveschool-api.herokuapp.com/api/product/";
+      const BearerToken =
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxYTJlNDRjNTllYzAwMTk5MGQ3MTgiLCJpYXQiOjE3MDkyODYxMTcsImV4cCI6MTcxMDQ5NTcxN30.NH_9_0FJ5pLz6avw0ePB0b6Pb7fBKAU5QygujI6cibA";
+
+      // genero delle variabili per ottenere i parametri presenti nella stringa di query dell'URL.
+      const params = new URLSearchParams(window.location.search);
+      const productId = params.get("productId");
+
+      // genero un URL dinamico
+      //   const dynamicURL = () => {
+      //     if (productId) {
+      //       return URL + productId;
+      //     } else {
+      //       return URL;
+      //     }
+      //   };
+      const dynamicURL = productId ? URL + productId : URL;
+
+      //  determino il metodo HTTP da utilizzare in base all'URL dinamico
+      //   const method = () => {
+      //     if (productId) {
+      //       method = "PUT";
+      //     } else {
+      //       method = "POST";
+      //     }
+      //   };
+      const method = productId ? "PUT" : "POST";
+
+      // rigenero i campi del prodotto selezionato all'apertura della pagina details.
+      window.onload = () => {
+        if (productId) {
+          fetch(dynamicURL, {
+            headers: {
+              Authorization: BearerToken,
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+            })
+            .then((product = { name, description, price, imageUrl, brand }) => {
+              document.getElementById("name").value = product.name;
+              document.getElementById("description").value = product.description;
+              document.getElementById("brand").value = product.brand;
+              document.getElementById("imageUrl").value = product.imageUrl;
+              document.getElementById("price").value = product.price;
+            })
+            .catch((error) => console.log(error));
+        }
+      };
+      //   raccolgo i dati dai campi del form dopo l'evento onsubmit.
+      const handleProduct = (event) => {
+        event.preventDefault();
+        const productsObj = {
+          name: document.getElementById("name").value,
+          description: document.getElementById("description").value,
+          brand: document.getElementById("brand").value,
+          imageUrl: document.getElementById("imageUrl").value,
+          price: document.getElementById("price").value,
+        };
+
+        //   modifico o creo un prodotto in base al metodo riconosciuto leggendo il metodo dinamicizzato in precedenza.
+        fetch(URL, {
+          method,
+          body: JSON.stringify(productsObj),
+          headers: {
+            Authorization: BearerToken,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+
+          // in base al tipo di metodo utilizzato definisco se l'operazione avvenuta è una modifica o una creazione gli do comferma attraverso un'alert apposito
+          .then((productsObj) => {
+            if (productId) {
+              alert("Prodotto: " + productsObj._id + " modificato con successo!");
+            } else {
+              alert("Prodotto: " + productsObj._id + "creato con successo!");
+            }
+          })
+          .catch((error) => console.log(error));
+
+        // resetto i campi del form nel momento in cui non mi trovo nella sezione di modifica, riconosciuta dalla non presenza del productId sull'URL
+        if (!productId) {
+          document.getElementById("name").value = "";
+          document.getElementById("description").value = "";
+          document.getElementById("price").value = "";
+        }
+      };
+    </script>
+  </body>
+</html>

@@ -137,7 +137,7 @@
       //       method = "POST";
       //     }
       //   };
-      const method = productId ? "PUT" : "POST";
+      let method = productId ? "PUT" : "POST";
 
       // rigenero i campi del prodotto selezionato all'apertura della pagina details.
       window.onload = () => {
@@ -174,7 +174,7 @@
         };
 
         //   modifico o creo un prodotto in base al metodo riconosciuto leggendo il metodo dinamicizzato in precedenza.
-        fetch(URL, {
+        fetch(dynamicURL, {
           method,
           body: JSON.stringify(productsObj),
           headers: {
@@ -182,7 +182,11 @@
             "Content-Type": "application/json",
           },
         })
-          .then((response) => response.json())
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else throw new Error("Qualcosa è andato storto!");
+          })
 
           // in base al tipo di metodo utilizzato definisco se l'operazione avvenuta è una modifica o una creazione gli do comferma attraverso un'alert apposito
           .then((productsObj) => {
